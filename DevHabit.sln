@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A78C
 		.github\build.yml = .github\build.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{CEFCB626-3052-4E86-837B-C9BC07198569}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E7B7C368-921E-4D50-8021-084139161149} = {C2AAF46D-032D-4DB4-ADF9-91E54A455BAA}
+		{CEFCB626-3052-4E86-837B-C9BC07198569} = {A78C55B7-2A6C-4D26-B6A7-3B11886A41A4}
 	EndGlobalSection
 EndGlobal
