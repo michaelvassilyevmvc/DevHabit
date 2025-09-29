@@ -5,34 +5,16 @@ services:
       context: "C:\\__Courses\\_pragma_api\\code\\start\\DevHabit"
       dockerfile: "DevHabit.Api/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/JetBrains/RiderDebuggerTools/linux-x64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57000"
-    - "--backend-port=57200"
-    - "--roslyn-worker-port=57400"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/DevHabit.Api.dll"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
-      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "devhabitapi:dev"
-    ports:
-    - "127.0.0.1:57000:57000"
-    - "127.0.0.1:57200:57200"
-    - "127.0.0.1:57400:57400"
+    ports: []
     volumes:
     - "C:\\__Courses\\_pragma_api\\code\\start\\DevHabit\\DevHabit.Api:/app:rw"
     - "C:\\__Courses\\_pragma_api\\code\\start\\DevHabit:/src:rw"
     - "C:\\Users\\User\\.nuget\\packages:/home/app/.nuget/packages"
-    - "C:\\Users\\User\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2025.2.1\\\
-      Linux64:/opt/JetBrains/RiderDebuggerTools"
-    - "C:\\Program Files\\JetBrains\\JetBrains Rider 2024.2.7\\bin\\backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "C:\\Users\\User\\AppData\\Local\\JetBrains\\Rider2025.2\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2025_9_29_19_48_57:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
