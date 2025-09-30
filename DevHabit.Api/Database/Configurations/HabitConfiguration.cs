@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DevHabit.Api.Database.Configurations;
 
-public sealed class HabitConfiguration: IEntityTypeConfiguration<Habit>
+public sealed class HabitConfiguration : IEntityTypeConfiguration<Habit>
 {
     public void Configure(EntityTypeBuilder<Habit> builder)
     {
         builder.HasKey(h => h.Id);
-        builder.Property(h=> h.Id).HasMaxLength(500).IsRequired();
+        builder.Property(h => h.Id)
+            .HasMaxLength(500)
+            .IsRequired();
         builder.Property(h => h.Name)
             .HasMaxLength(100);
         builder.Property(h => h.Description)
@@ -21,5 +23,8 @@ public sealed class HabitConfiguration: IEntityTypeConfiguration<Habit>
                 .HasMaxLength(100);
         });
         builder.OwnsOne(h => h.Milestone);
+        builder.HasMany(h => h.Tags)
+            .WithMany()
+            .UsingEntity<HabitTag>();
     }
 }
