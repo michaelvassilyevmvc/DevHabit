@@ -18,7 +18,7 @@ public partial class Add_HabitTags : Migration
             {
                 habit_id = table.Column<string>(type: "character varying(500)", nullable: false),
                 tag_id = table.Column<string>(type: "character varying(500)", nullable: false),
-                craeted_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 habit_id1 = table.Column<string>(type: "character varying(500)", nullable: true)
             },
             constraints: table =>
