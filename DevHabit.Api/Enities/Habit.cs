@@ -1,5 +1,7 @@
 ﻿namespace DevHabit.Api.Enities;
 
+
+
 public sealed class Habit
 {
     public string Id { get; set; }
