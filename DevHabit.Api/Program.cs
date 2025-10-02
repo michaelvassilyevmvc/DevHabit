@@ -1,5 +1,6 @@
 using DevHabit.Api.Database;
 using DevHabit.Api.Extensions;
+using DevHabit.Api.Middleware;
 using FluentValidation;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -19,7 +20,9 @@ builder.Services.AddControllers(options =>
     .AddNewtonsoftJson()
     .AddXmlSerializerFormatters();
 
+// Fluenty Validator
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+// Обработка ошибок сервера с выдачей в нужном формате
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -27,6 +30,10 @@ builder.Services.AddProblemDetails(options =>
         context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
     };
 });
+// Обработка валидации и вывод в стандартном виде
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+// Пользовательская обработка исключений
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -64,7 +71,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-
+app.UseExceptionHandler();
 app.MapControllers();
 
 await app.RunAsync();
