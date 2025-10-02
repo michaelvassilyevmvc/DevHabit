@@ -31,7 +31,7 @@ public enum HabitType
 {
     None = 0,
     Binary = 1,
-    Measure = 2
+    Measurable = 2
 }
 
 public enum HabitStatus
