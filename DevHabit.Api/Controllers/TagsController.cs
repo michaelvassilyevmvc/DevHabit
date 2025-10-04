@@ -21,7 +21,7 @@ public class TagsController(ApplicationDbContext dbContext) : ControllerBase
             .ToListAsync();
         var tagsCollectionDto = new TagsCollectionDto
         {
-            Data = tags
+            Items = tags
         };
         return Ok(tagsCollectionDto);
     }

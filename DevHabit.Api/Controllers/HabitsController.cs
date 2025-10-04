@@ -16,7 +16,7 @@ namespace DevHabit.Api.Controllers;
 public sealed class HabitsController(ApplicationDbContext dbContext) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<HabitsCollectionDto>> GetHabits([FromQuery] HabitsQueryParameters query,
+    public async Task<ActionResult<PaginationResult<HabitDto>>> GetHabits([FromQuery] HabitsQueryParameters query,
         SortMappingProvider sortMappingProvider)
     {
         if (query.Search is not null)
@@ -28,13 +28,14 @@ public sealed class HabitsController(ApplicationDbContext dbContext) : Controlle
         // Формируем сортировку
         if (!sortMappingProvider.ValidateMappings<HabitDto, Habit>(query.Sort))
         {
-            return Problem(statusCode:StatusCodes.Status400BadRequest,
-                detail:$"The provided sort parameter isn't valid: '{query.Sort}'");
+            return Problem(statusCode: StatusCodes.Status400BadRequest,
+                detail: $"The provided sort parameter isn't valid: '{query.Sort}'");
         }
+
         SortMapping[] sortMappings = sortMappingProvider.GetMappings<HabitDto, Habit>();
 
 
-        List<HabitDto> habits = await dbContext.Habits
+        IQueryable<HabitDto> habitsQuery = dbContext.Habits
             .Where(h => query.Search == null ||
                         h.Name.ToLower()
                             .Contains(query.Search) ||
@@ -44,10 +45,11 @@ public sealed class HabitsController(ApplicationDbContext dbContext) : Controlle
             .Where(h => query.Type == null || h.Type == query.Type)
             .Where(h => query.Status == null || h.Status == query.Status)
             .ApplySort(query.Sort, sortMappings)
-            .Select(HabitQueries.ProjectToDto())
-            .ToListAsync();
-        var habitsCollectionDto = new HabitsCollectionDto() { Data = habits };
-        return Ok(habitsCollectionDto);
+            .Select(HabitQueries.ProjectToDto());
+
+        var paginationResult = await PaginationResult<HabitDto>.CreateAsync(habitsQuery,query.Page,query.PageSize);
+        
+        return Ok(paginationResult);
     }
 
 
