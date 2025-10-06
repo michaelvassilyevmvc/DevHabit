@@ -22,17 +22,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.AddControllers()
     .AddErrorHandling()
     .AddDatabase()
-    .AddObservability();
+    .AddObservability()
+    .AddApplicationServices();
 
-
-
-
-
-
-builder.Services.AddTransient<SortMappingProvider>();
-builder.Services.AddSingleton<ISortMappingDefinition, SortMappingDefinition<HabitDto, Habit>>(_ =>
-    HabitMappings.SortMapping);
-builder.Services.AddTransient<DataShapingService>();
 
 WebApplication app = builder.Build();
 
