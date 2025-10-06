@@ -19,22 +19,10 @@ using Npgsql;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 
-builder.AddControllers();
+builder.AddControllers()
+    .AddErrorHandling();
 
-// Fluenty Validator
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-// Обработка ошибок сервера с выдачей в нужном формате
-builder.Services.AddProblemDetails(options =>
-{
-    options.CustomizeProblemDetails = context =>
-    {
-        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-    };
-});
-// Обработка валидации и вывод в стандартном виде
-builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
-// Пользовательская обработка исключений
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
