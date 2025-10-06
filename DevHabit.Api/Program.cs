@@ -1,3 +1,4 @@
+using DevHabit.Api;
 using DevHabit.Api.Database;
 using DevHabit.Api.DTOs.Habits;
 using DevHabit.Api.Enities;
@@ -18,15 +19,7 @@ using Npgsql;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers(options =>
-    {
-        options.ReturnHttpNotAcceptable = true;
-    })
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-    })
-    .AddXmlSerializerFormatters();
+builder.AddControllers();
 
 // Fluenty Validator
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -43,7 +36,7 @@ builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 // Пользовательская обработка исключений
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddOpenApi();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database"),
             npgsqlOptions =>
