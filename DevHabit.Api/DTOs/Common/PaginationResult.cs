@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DevHabit.Api.DTOs.Habits;
+namespace DevHabit.Api.DTOs.Habits.Common;
 
 public sealed record PaginationResult<T> : ICollectionResponse<T>
 {

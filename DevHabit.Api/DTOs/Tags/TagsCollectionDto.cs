@@ -1,4 +1,5 @@
 ﻿using DevHabit.Api.DTOs.Habits;
+using DevHabit.Api.DTOs.Habits.Common;
 
 namespace DevHabit.Api.DTOs.Tags;
 

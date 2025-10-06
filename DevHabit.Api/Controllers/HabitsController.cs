@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using DevHabit.Api.Database;
 using DevHabit.Api.DTOs.Habits;
+using DevHabit.Api.DTOs.Habits.Common;
 using DevHabit.Api.Enities;
 using DevHabit.Api.Services;
 using DevHabit.Api.Services.Sorting;

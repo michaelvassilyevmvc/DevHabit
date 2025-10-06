@@ -1,4 +1,4 @@
-﻿namespace DevHabit.Api.DTOs.Habits;
+﻿namespace DevHabit.Api.DTOs.Habits.Common;
 
 public interface ICollectionResponse<T>
 {
