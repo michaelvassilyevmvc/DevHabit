@@ -79,8 +79,13 @@ public sealed class HabitsController(ApplicationDbContext dbContext, LinkService
             ),
             Page = query.Page,
             PageSize = query.PageSize,
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
+        paginationResult.Links = CreateLinksForHabits(
+            query,
+            paginationResult.HasNextPage,
+            paginationResult.HasPreviousPage
+        );
 
         return Ok(paginationResult);
     }
@@ -186,6 +191,62 @@ public sealed class HabitsController(ApplicationDbContext dbContext, LinkService
         return NoContent();
     }
 
+    private List<LinkDto> CreateLinksForHabits(
+        HabitsQueryParameters parameters,
+        bool hasNextPage,
+        bool hasPreviousPage
+    )
+    {
+        List<LinkDto> links =
+        [
+            linkService.Create(nameof(GetHabits), "self", HttpMethods.Get, new
+            {
+                page = parameters.Page,
+                pageSize = parameters.PageSize,
+                fields = parameters.Fields,
+                q = parameters.Search,
+                sort = parameters.Sort,
+                type = parameters.Type,
+                status = parameters.Status,
+            }),
+            linkService.Create(nameof(CreateHabit), "create", HttpMethods.Post)
+        ];
+
+        if (hasNextPage)
+        {
+            links.Add(
+                linkService.Create(nameof(GetHabits), "next-page", HttpMethods.Get, new
+                {
+                    page = parameters.Page + 1,
+                    pageSize = parameters.PageSize,
+                    fields = parameters.Fields,
+                    q = parameters.Search,
+                    sort = parameters.Sort,
+                    type = parameters.Type,
+                    status = parameters.Status,
+                })
+            );
+        }
+
+        if (hasPreviousPage)
+        {
+            links.Add(
+                linkService.Create(nameof(GetHabits), "previous-page", HttpMethods.Get, new
+                {
+                    page = parameters.Page - 1,
+                    pageSize = parameters.PageSize,
+                    fields = parameters.Fields,
+                    q = parameters.Search,
+                    sort = parameters.Sort,
+                    type = parameters.Type,
+                    status = parameters.Status,
+                })
+            );
+        }
+
+        return links;
+    }
+
     private List<LinkDto> CreateLinksForHabit(string id, string? fields)
     {
         List<LinkDto> links =
@@ -193,7 +254,14 @@ public sealed class HabitsController(ApplicationDbContext dbContext, LinkService
             linkService.Create(nameof(GetHabit), "self", HttpMethods.Get, new { id, fields }),
             linkService.Create(nameof(UpdateHabit), "update", HttpMethods.Put, new { id }),
             linkService.Create(nameof(PatchHabit), "partial-update", HttpMethods.Patch, new { id }),
-            linkService.Create(nameof(DeleteHabit), "delete", HttpMethods.Delete, new { id })
+            linkService.Create(nameof(DeleteHabit), "delete", HttpMethods.Delete, new { id }),
+            linkService.Create(
+                nameof(HabitTagsController.UpsertHabitTags),
+                "upsert-tags",
+                HttpMethods.Put,
+                new { habitId = id },
+                HabitTagsController.Name
+            ),
         ];
         return links;
     }
