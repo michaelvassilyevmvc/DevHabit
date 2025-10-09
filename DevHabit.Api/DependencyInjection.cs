@@ -1,4 +1,5 @@
-﻿using DevHabit.Api.Database;
+﻿using Asp.Versioning;
+using DevHabit.Api.Database;
 using DevHabit.Api.DTOs.Habits;
 using DevHabit.Api.Enities;
 using DevHabit.Api.Middleware;
@@ -20,7 +21,7 @@ namespace DevHabit.Api;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddControllers(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddApiServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllers(options =>
             {
@@ -37,6 +38,19 @@ public static class DependencyInjection
                 .First();
             formatter.SupportedMediaTypes.Add(CustomMediaTypeNames.Application.HateoasJson);
         });
+
+        // Настраиваем использование версий (AddMvc если используете контроллеры)
+        builder.Services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1.0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
+
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+            .AddMvc();
+
         builder.Services.AddOpenApi();
         return builder;
     }
